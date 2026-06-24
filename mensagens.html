@@ -46,35 +46,116 @@ function iniciarsite() {
 
 <h1>Site de Mensagens</h1>
 
-<textarea id="texto" placeholder="Escreva aqui..."></textarea>
+<input type="text" id="nome" placeholder="Seu nome">
+<br>
+
+<textarea id="texto" placeholder="Escreva algo..."></textarea>
 <br>
 
 <button onclick="enviarMensagem()">
-    Enviar
+Enviar
 </button>
 
 <div id="mensagens"></div>
 
 <script>
+
+let mensagens = JSON.parse(localStorage.getItem("mensagens")) || [];
+
+function salvarMensagens() {
+    localStorage.setItem("mensagens", JSON.stringify(mensagens));
+}
+
+function mostrarMensagens() {
+
+    let area = document.getElementById("mensagens");
+
+    area.innerHTML = "";
+
+    mensagens.forEach((msg, index) => {
+
+        let div = document.createElement("div");
+
+        div.className = "msg";
+
+        div.innerHTML = `
+            <div class="info">
+                <strong>${msg.nome}</strong> • ${msg.hora}
+            </div>
+
+            <div>
+                ${msg.texto}
+            </div>
+
+            <div class="acoes">
+                ❤️ ${msg.likes}
+
+                <button onclick="curtir(${index})">
+                    Curtir
+                </button>
+
+                <button onclick="apagar(${index})">
+                    Apagar
+                </button>
+            </div>
+        `;
+
+        area.appendChild(div);
+
+    });
+}
+
 function enviarMensagem() {
 
+    let nome = document.getElementById("nome").value;
     let texto = document.getElementById("texto").value;
 
-    if (texto.trim() === "") {
+    if(nome.trim() === "" || texto.trim() === "") {
         return;
     }
 
-    let novaMensagem = document.createElement("div");
+    let agora = new Date();
 
-    novaMensagem.className = "msg";
+    let horario =
+        agora.getHours().toString().padStart(2, '0')
+        + ":"
+        +
+        agora.getMinutes().toString().padStart(2, '0');
 
-    novaMensagem.innerText = texto;
+    mensagens.push({
+        nome: nome,
+        texto: texto,
+        hora: horario,
+        likes: 0
+    });
 
-    document.getElementById("mensagens")
-        .appendChild(novaMensagem);
+    salvarMensagens();
+
+    mostrarMensagens();
 
     document.getElementById("texto").value = "";
 }
+
+function curtir(index) {
+
+    mensagens[index].likes++;
+
+    salvarMensagens();
+
+    mostrarMensagens();
+}
+
+function apagar(index) {
+
+    mensagens.splice(index, 1);
+
+    salvarMensagens();
+
+    mostrarMensagens();
+}
+
+mostrarMensagens();
+
 </script>
 
 </body>
