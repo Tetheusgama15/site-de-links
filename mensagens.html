@@ -36,6 +36,8 @@
 </head>
 <body>
 
+<button onclick="iniciarsite()">Voltar ao Site Original</button>
+
 <h1>Site de Mensagens</h1>
 
 <input id="nome" placeholder="Seu nome">
@@ -85,13 +87,14 @@ const db = getFirestore(app);
 <textarea id="texto" placeholder="Escreva algo..."></textarea>
 <br>
 
-<button onclick="enviarMensagem()">
-Enviar
-</button>
-
 <div id="mensagens"></div>
 
 <script>
+
+async function enviar(){
+}
+
+window.enviar = enviar;
 
 let mensagens = JSON.parse(localStorage.getItem("mensagens")) || [];
 
