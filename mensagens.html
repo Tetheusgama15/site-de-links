@@ -36,15 +36,48 @@
 </head>
 <body>
 
-<button onclick="iniciarsite()">Voltar ao Site Original</button>
-
-<script>
-function iniciarsite() {
-    window.location.href = "index.html";
-}
-</script>
-
 <h1>Site de Mensagens</h1>
+
+<input id="nome" placeholder="Seu nome">
+<br>
+
+<textarea id="texto" placeholder="Mensagem"></textarea>
+<br>
+
+<button onclick="enviar()">
+Enviar
+</button>
+
+<div id="mensagens"></div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+onSnapshot,
+query,
+orderBy
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCse8bgGnei4AGlocS2U4lxy9QQunkoWcU",
+  authDomain: "online-90734.firebaseapp.com",
+  projectId: "online-90734",
+  storageBucket: "online-90734.firebasestorage.app",
+  messagingSenderId: "727708437579",
+  appId: "1:727708437579:web:d9c999d87234d12d4a11ce",
+  measurementId: "G-QES42NTMYN"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
 
 <input type="text" id="nome" placeholder="Seu nome">
 <br>
