@@ -38,6 +38,12 @@
 
 <button onclick="iniciarsite()">Voltar ao Site Original</button>
 
+<script>
+function iniciarsite() {
+    window.location.href = "index.html";
+}
+</script>
+
 <h1>Site de Mensagens</h1>
 
 <input id="nome" placeholder="Seu nome">
@@ -61,6 +67,8 @@ import {
 getFirestore,
 collection,
 addDoc,
+deleteDoc,
+doc,
 onSnapshot,
 query,
 orderBy
@@ -81,116 +89,72 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-<input type="text" id="nome" placeholder="Seu nome">
-<br>
+window.enviar = async function(){
 
-<textarea id="texto" placeholder="Escreva algo..."></textarea>
-<br>
+    let nome =
+        document.getElementById("nome").value;
 
-<div id="mensagens"></div>
+    let texto =
+        document.getElementById("texto").value;
 
-<script>
+await addDoc(collection(db, "mensagens"), {
 
-async function enviar(){
-}
+    nome: nome,
+    texto: texto,
+    data: Date.now(),
+    hora: new Date().toLocaleTimeString()
 
-window.enviar = enviar;
+});
 
-let mensagens = JSON.parse(localStorage.getItem("mensagens")) || [];
+};
 
-function salvarMensagens() {
-    localStorage.setItem("mensagens", JSON.stringify(mensagens));
-}
+const q = query(
+    collection(db, "mensagens"),
+    orderBy("data")
+);
 
-function mostrarMensagens() {
+onSnapshot(q, (snapshot) => {
 
-    let area = document.getElementById("mensagens");
+    let area =
+        document.getElementById("mensagens");
 
     area.innerHTML = "";
 
-    mensagens.forEach((msg, index) => {
+    snapshot.forEach((doc) => {
 
-        let div = document.createElement("div");
+        let msg = doc.data();
 
-        div.className = "msg";
+        area.innerHTML += `
+            <div style="
+                background:white;
+                padding:10px;
+                margin:10px;
+                border-radius:10px;
+            ">
 
-        div.innerHTML = `
-            <div class="info">
-                <strong>${msg.nome}</strong> • ${msg.hora}
-            </div>
+                <strong>${msg.nome}</strong>
 
-            <div>
+                <br><br>
+
+<button onclick="apagar('${doc.id}')">
+Apagar
+</button>
+
+${msg.hora || "00:00"}
+
                 ${msg.texto}
-            </div>
 
-            <div class="acoes">
-                ❤️ ${msg.likes}
-
-                <button onclick="curtir(${index})">
-                    Curtir
-                </button>
-
-                <button onclick="apagar(${index})">
-                    Apagar
-                </button>
             </div>
         `;
 
-        area.appendChild(div);
-
-    });
-}
-
-function enviarMensagem() {
-
-    let nome = document.getElementById("nome").value;
-    let texto = document.getElementById("texto").value;
-
-    if(nome.trim() === "" || texto.trim() === "") {
-        return;
-    }
-
-    let agora = new Date();
-
-    let horario =
-        agora.getHours().toString().padStart(2, '0')
-        + ":"
-        +
-        agora.getMinutes().toString().padStart(2, '0');
-
-    mensagens.push({
-        nome: nome,
-        texto: texto,
-        hora: horario,
-        likes: 0
     });
 
-    salvarMensagens();
+});
 
-    mostrarMensagens();
+window.apagar = async function(id){
 
-    document.getElementById("texto").value = "";
-}
-
-function curtir(index) {
-
-    mensagens[index].likes++;
-
-    salvarMensagens();
-
-    mostrarMensagens();
-}
-
-function apagar(index) {
-
-    mensagens.splice(index, 1);
-
-    salvarMensagens();
-
-    mostrarMensagens();
-}
-
-mostrarMensagens();
+    await deleteDoc(doc(db, "mensagens", id));
+};
 
 </script>
 
