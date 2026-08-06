@@ -46,9 +46,6 @@ function iniciarsite() {
 
 <h1>Site de Mensagens</h1>
 
-<input id="nome" placeholder="Seu nome">
-<br>
-
 <textarea id="texto" placeholder="Mensagem"></textarea>
 <br>
 
@@ -75,6 +72,12 @@ orderBy
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+import {
+getAuth,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 const firebaseConfig = {
  apiKey: "AIzaSyCse8bgGnei4AGlocS2U4lxy9QQunkoWcU",
   authDomain: "online-90734.firebaseapp.com",
@@ -89,17 +92,23 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
+const auth = getAuth(app);
+
 window.enviar = async function(){
 
-    let nome =
-        document.getElementById("nome").value;
+const usuario = auth.currentUser;
 
-    let texto =
-        document.getElementById("texto").value;
+if (!usuario) {
+    alert("Você precisa fazer login.");
+    return;
+}
+
+let texto =
+document.getElementById("texto").value;
 
 await addDoc(collection(db, "mensagens"), {
 
-    nome: nome,
+    nome: usuario.email.split("@")[0],
     texto: texto,
     data: Date.now(),
     hora: new Date().toLocaleTimeString()
@@ -156,6 +165,11 @@ window.apagar = async function(id){
     await deleteDoc(doc(db, "mensagens", id));
 };
 
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        window.location.href = "login.html";
+    }
+});
 </script>
 
 </body>
