@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            text-align: center;
+        }
+
+        header {
+            background-color: #00FFFF;
+            color: black;
+            padding: 1px;
+        }
+
+        main {
+            margin: 1px;
+        }
+
+        button {
+            padding: 10px 10px;
+            border: none;
+            background-color: #0000FF;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff2c2c;
+        }
+</style>
+</head>
+<body>
+
+<button onclick="iniciarsite()">Voltar ao Site Original</button>
+
+<script>
+function iniciarsite() {
+    window.location.href = "index.html";
+}
+</script>
+
+<h1>Login</h1>
+
+<input type="email" id="email" placeholder="E-mail">
+
+<input type="password" id="senha" placeholder="Senha">
+
+<button onclick="registrar()">Criar conta</button>
+
+<button onclick="login()">Entrar</button>
+
+<button onclick="sair()">Sair</button>
+
+<p id="usuario"></p>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getAuth,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+ apiKey: "AIzaSyCse8bgGnei4AGlocS2U4lxy9QQunkoWcU",
+  authDomain: "online-90734.firebaseapp.com",
+  projectId: "online-90734",
+  storageBucket: "online-90734.firebasestorage.app",
+  messagingSenderId: "727708437579",
+  appId: "1:727708437579:web:d9c999d87234d12d4a11ce",
+  measurementId: "G-QES42NTMYN"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+window.registrar = async function () {
+
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+
+    try {
+        await createUserWithEmailAndPassword(auth, email, senha);
+        alert("Conta criada com sucesso!");
+    } catch (erro) {
+        alert(erro.message);
+    }
+};
+
+window.login = async function () {
+
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+
+    try {
+        await signInWithEmailAndPassword(auth, email, senha);
+        alert("Login realizado!");
+    } catch (erro) {
+        alert(erro.message);
+    }
+};
+
+window.sair = async function () {
+    await signOut(auth);
+};
+
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+        document.getElementById("usuario").innerText =
+            "Logado como: " + user.email;
+    } else {
+        document.getElementById("usuario").innerText =
+            "Nenhum usuário logado";
+    }
+
+});
+</script>
+
+<button onclick="sitemensagens()">Site de Mensagens</button>
+
+<script>
+function sitemensagens() {
+    window.location.href = "mensagens.html";
+}
+</script>
