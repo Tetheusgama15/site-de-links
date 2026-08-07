@@ -77,6 +77,7 @@ getFirestore,
 collection,
 addDoc,
 deleteDoc,
+updateDoc,
 doc,
 onSnapshot,
 query,
@@ -121,6 +122,8 @@ document.getElementById("texto").value;
 await addDoc(collection(db, "mensagens"), {
 
     nome: usuario.email.split("@")[0],
+    uid: usuario.uid,
+    curtidas: 0,
     texto: texto,
     data: Date.now(),
     hora: new Date().toLocaleTimeString()
@@ -145,6 +148,13 @@ onSnapshot(q, (snapshot) => {
 
         let msg = doc.data();
 
+        let botaoApagar = "";
+        let botaoEditar = "";
+        if (auth.currentUser && auth.currentUser.uid === msg.uid) {
+            botaoApagar = `<button onclick="apagar('${doc.id}')">🗑️ Apagar</button>`;
+            botaoEditar = `<button onclick="editar('${doc.id}', ${JSON.stringify(msg.texto)})">✏️ Editar</button>`;
+        }
+
         area.innerHTML += `
             <div style="
                 background:white;
@@ -157,9 +167,8 @@ onSnapshot(q, (snapshot) => {
 
                 <br><br>
 
-<button onclick="apagar('${doc.id}')">
-Apagar
-</button>
+${botaoEditar} ${botaoApagar}
+<button onclick="curtir('${doc.id}', ${msg.curtidas || 0})">❤️ ${msg.curtidas || 0}</button>
 
 ${msg.hora || "00:00"}
 
@@ -171,6 +180,19 @@ ${msg.hora || "00:00"}
     });
 
 });
+
+
+window.curtir = async function(id, curtidas){
+ await updateDoc(doc(db,"mensagens",id),{curtidas:curtidas+1});
+};
+
+window.editar = async function(id,textoAtual){
+ const novo=prompt("Editar mensagem:",textoAtual);
+ if(novo && novo.trim()!==""){
+   await updateDoc(doc(db,"mensagens",id),{texto:novo});
+ }
+};
+
 
 window.apagar = async function(id){
 
