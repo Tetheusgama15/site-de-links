@@ -152,7 +152,7 @@ onSnapshot(q, (snapshot) => {
         let botaoEditar = "";
         if (auth.currentUser && auth.currentUser.uid === msg.uid) {
             botaoApagar = `<button onclick="apagar('${doc.id}')">🗑️ Apagar</button>`;
-            botaoEditar = `<button onclick="editar('${doc.id}', ${JSON.stringify(msg.texto)})">✏️ Editar</button>`;
+            botaoEditar = `<button onclick="editar('${doc.id}')">✏️ Editar</button>`;
         }
 
         area.innerHTML += `
@@ -186,9 +186,12 @@ window.curtir = async function(id, curtidas){
  await updateDoc(doc(db,"mensagens",id),{curtidas:curtidas+1});
 };
 
-window.editar = async function(id,textoAtual){
- const novo=prompt("Editar mensagem:",textoAtual);
- if(novo && novo.trim()!==""){
+window.editar = async function(id){
+ const elemento=[...document.querySelectorAll('#mensagens button')];
+ const textoEl = event.target.closest('div').querySelector('strong').nextSibling;
+ const atual = event.target.closest('div').innerText.split('\n').slice(-1)[0].trim();
+ const novo=prompt("Editar mensagem:",atual);
+ if(novo!==null && novo.trim()!==""){
    await updateDoc(doc(db,"mensagens",id),{texto:novo});
  }
 };
