@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             background-color: white;
             text-align: center;
-            font-size: 20px;
+            font-size: 25px;
         }
 
         header {
@@ -28,7 +28,7 @@
             background-color: #0000FF;
             color: white;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 25px;
         }
 
         button:hover {
@@ -48,6 +48,27 @@ input {
 <header>
 <h1>Login</h1>
 </header>
+
+<main>
+<h2>Mudar Tema do Site</h2>
+</main>
+
+<main>
+<button onclick="darkmode()">Tema Escuro</button>
+<button onclick="whitemode()">Tema Claro</button>
+</main>
+
+<script>
+function darkmode() {
+    document.body.style.backgroundColor = "black";
+    document.body.style.color = "white";
+}
+
+function whitemode() {
+    document.body.style.backgroundColor = "white";
+    document.body.style.color = "black";
+}
+</script>
 
 OBS: Crie Sua Conta Com @gmail.com no Final do Seu Nome.
 
