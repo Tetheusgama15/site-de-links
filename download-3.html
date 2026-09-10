@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Download</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        header {
+            background-color: #00FFFF;
+            color: black;
+            padding: 1px;
+        }
+
+        main {
+            margin: 1px;
+        }
+
+        button {
+            padding: 20px 30px;
+            border: none;
+            background-color: #0000FF;
+            color: white;
+            cursor: pointer;
+            font-size: 40px;
+        }
+
+        button:hover {
+            background-color: #ff2c2c;
+        }
+    </style>
+</head>
+<body>
+
+  <h1>Tem Certeza Que Quer Baixar o Arquivo?</h1>
+  
+  <a href="arquivos/Minecraft.apk" download> <button>Sim</button> </a>
+
+    <button onclick="iniciarsite()">Não</button>
+
+<script>
+function iniciarsite() {
+    window.location.href = "index.html";
+}
+</script>
